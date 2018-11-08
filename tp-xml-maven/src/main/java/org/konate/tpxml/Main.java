@@ -1,59 +1,29 @@
 package org.konate.tpxml;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
+import org.dom4j.DocumentException;
 import org.xml.sax.SAXException;
 
 public class Main {
 
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, DocumentException {
 		// TODO Auto-generated method stub
 		
-		//Approche DOM
-		Document doc = DocumentHelper.createDocument();
-		Element root = 	doc.addElement("User");
-		root.addElement("Name")
-			.addText("Hugo");
-		root.addElement("Age")
-			.addText("29");
+		Marin satya = new Marin(1, "Staya", "Nadella", 46);
 		
-		File file = new File("./files/outputXML.txt");
-		FileOutputStream out = new FileOutputStream(file);
-		OutputFormat outputFormat = OutputFormat.createPrettyPrint();
-		outputFormat.setEncoding("utf-8");
+		XMLUtil util = new XMLUtil();
+		Document document = util.seriaze(satya);
+		File file = new File("./XML/MarinXML.xml");
+		util.write(document, file);
 		
-		try {
-			XMLWriter w = new XMLWriter(out, outputFormat);
-					  w.write(doc);
-					  w.flush();
-					  w.close();
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-		}
+		System.out.println(util.read(file).asXML());
 		
-		
-		//Approche SAX
-		FileInputStream in = new FileInputStream(file);
-		SAXParserFactory sp = SAXParserFactory.newInstance();
-						 sp.setNamespaceAware(true);
-						 sp.setValidating(true);
-		CountingHandler dh = new CountingHandler();
-		SAXParser parser = sp.newSAXParser();
-				  parser.parse(in, dh);
-		System.out.println("Counting " + dh.getCount() + " elements in " + file.getName());
+		System.out.println(util.deserialize(util.read(file)));
 	}
 
 }

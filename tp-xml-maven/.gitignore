@@ -1,6 +1,6 @@
 /target/
-/.project/
-/.classpath/
-/.settings/
+.project
+.classpath
+.settings
 /TPs XML/
 /Tests XML/

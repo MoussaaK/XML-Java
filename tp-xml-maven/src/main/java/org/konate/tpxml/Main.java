@@ -14,15 +14,17 @@ public class Main {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, DocumentException {
 		// TODO Auto-generated method stub
 		
-		Marin satya = new Marin(1, "Staya", "Nadella", 46);
+		Marin satya = new Marin(10, "NADELLA", "Satya", 51);
 		
 		XMLUtil util = new XMLUtil();
 		Document document = util.seriaze(satya);
 		File file = new File("./XML/MarinXML.xml");
 		util.write(document, file);
 		
+		//Print after reading the XML file
 		System.out.println(util.read(file).asXML());
 		
+		//Create instance of Marin after reading the XML file
 		System.out.println(util.deserialize(util.read(file)));
 	}
 

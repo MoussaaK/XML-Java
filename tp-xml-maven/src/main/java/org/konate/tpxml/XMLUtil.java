@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -17,12 +14,10 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class XMLUtil extends DefaultHandler {
 	
-	private int count; 
 	Element root;
 	Document seriaze(Marin marin) {
 		
@@ -58,19 +53,22 @@ public class XMLUtil extends DefaultHandler {
 		}
 	}
 	
-	public Document read(File file) throws ParserConfigurationException, SAXException, IOException, DocumentException {
+	public Document read(File file) throws DocumentException {
 		SAXReader reader = new SAXReader();
 	    Document document = reader.read(file);
-	    Element rootElement = document.getRootElement(); 
 	    
 	    return document;
 	}
 	
 	public Marin deserialize(Document document) {
 		Element rootElement = document.getRootElement();
-		List<Element> element = rootElement.elements();
+		List<Element> elements = rootElement.elements();
 		
-	    
+		Long id = Long.parseLong(rootElement.attributeValue("id"));
+		String nom = elements.get(0).getText();
+		String prenom = elements.get(1).getText();
+		int age = Integer.parseInt(elements.get(2).getText());
+	    	    
 		return new Marin(id, nom, prenom, age);
 	}
 }

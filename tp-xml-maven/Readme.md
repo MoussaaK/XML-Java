@@ -2,7 +2,7 @@
 
 ## Exercice 1
 ### Question 3 :
-1. On ajoute une instance en faisant appel � la m�thode **createDocument()** de la classe factory **DocumentHelper**
+1. On ajoute une instance en faisant appel à  la méthode **createDocument()** de la classe factory **DocumentHelper**
 2. Le noeud racine se nomme **marin**
 3. En faisant appel à la méthode **addElement()** sur le document
 4. En faisant appel à la méthode **addAttribute()** sur le 

@@ -16,7 +16,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class RSSReader {
-	
+
 	private static boolean isRoot = true, inItem, inCategory;
 	private int countSubRoot, countEIN;
 	/**
@@ -30,8 +30,8 @@ public class RSSReader {
 	private List<String> titles = new ArrayList<>();
 	private List<String> categories = new ArrayList<>();
 	private List<String> microservices = new ArrayList<>();
-	
-	
+
+
 	/**
 	 * @return the microservices
 	 */
@@ -69,11 +69,11 @@ public class RSSReader {
 
 	public InputStream read(String url) throws ClientProtocolException, IOException {
 		//String url = "https://www.voxxed.com/feed/" ;
-		
+
 		// ouverture d'un client
 		HttpClient httpClient = HttpClientBuilder.create()
-												 .build();
-		
+				.build();
+
 		// création d'une méthode HTTP
 		HttpGet get = new HttpGet(url);
 		HttpResponse response = httpClient.execute(get);
@@ -90,7 +90,7 @@ public class RSSReader {
 
 		return inputStream;
 	}
-	
+
 	//Handler to get rootName
 	DefaultHandler rootName = new DefaultHandler() {
 		@Override
@@ -101,18 +101,18 @@ public class RSSReader {
 				isRoot = false;
 			}
 		}
-		
+
 		@Override
 		public void endDocument() {
-				isRoot = true;
+			isRoot = true;
 		}
 	};
-	
+
 	//Handler to count sub root elements
 	DefaultHandler countSubRootElements = new DefaultHandler() {
 		@Override
 		public void startElement(String uri, String localName,
-								 String qName, Attributes attributes) {
+				String qName, Attributes attributes) {
 			countSubRoot++;
 			if(isRoot) {
 				isRoot = false;
@@ -120,23 +120,23 @@ public class RSSReader {
 			}
 		}
 	};
-	
+
 	//Handler to count elements with name item
 	DefaultHandler countItemElements = new DefaultHandler() {
 		@Override
 		public void startElement(String uri, String localName,
-				                 String qName, Attributes attributes) {				
+				String qName, Attributes attributes) {				
 			if(localName.equals("item"))
 				countItem++;
 		}
 	};
-	
+
 	//Add all titles to a List
 	DefaultHandler itemTitles = new DefaultHandler() {
 		String string; 
 		@Override
 		public void startElement(String uri, String localName,
-				                 String qName, Attributes attributes) {				
+				String qName, Attributes attributes) {				
 			if(qName.equals("item"))
 				inItem = true;
 		}
@@ -148,20 +148,20 @@ public class RSSReader {
 		}
 		@Override
 		public void endElement(String uri, String localName,
-				               String qName) {				
+				String qName) {				
 			if(inItem){	
 				titles.add(string);
 				inItem = false;
 			}
 		}
 	};
-	
+
 	//Add all categories to a List
 	DefaultHandler CategoryTitles = new DefaultHandler() {
 		String string; 
 		@Override
 		public void startElement(String uri, String localName,
-				                 String qName, Attributes attributes) {				
+				String qName, Attributes attributes) {				
 			if(qName.equals("category"))
 				inCategory = true;
 		}
@@ -173,14 +173,14 @@ public class RSSReader {
 		}
 		@Override
 		public void endElement(String uri, String localName,
-				               String qName) {				
+				String qName) {				
 			if(inCategory) {
 				categories.add(string);
 				inCategory = false;
 			}
 		}
 	};
-	
+
 	//Handler to count elements namespace
 	DefaultHandler countElementsInNamespace = new DefaultHandler() {
 		@Override
@@ -190,41 +190,41 @@ public class RSSReader {
 				countEIN++;
 		}
 	};
-	
-	
+
+
 	//Add all categories to a List
-		DefaultHandler microservicesCategoryTitles = new DefaultHandler() {
-			private boolean inTitle;
-			private String title;
-			private String stringCategory;
-			@Override
-			public void startElement(String uri, String localName,
-					                 String qName, Attributes attributes) {				
-				if(qName.equals("category"))
-					inCategory = true;
-				if(qName.equals("item"))
-					inItem = true;
-				if(qName.equals("title"))
-					inTitle = true;
+	DefaultHandler microservicesCategoryTitles = new DefaultHandler() {
+		private boolean inTitle;
+		private String title;
+		private String stringCategory;
+		@Override
+		public void startElement(String uri, String localName,
+				String qName, Attributes attributes) {				
+			if(qName.equals("category"))
+				inCategory = true;
+			if(qName.equals("item"))
+				inItem = true;
+			if(qName.equals("title"))
+				inTitle = true;
+		}
+		@Override
+		public void characters(char[] ch, int start, int length) {
+			if(inCategory) 
+				stringCategory = new String(ch, start, length);
+			if(inTitle)
+				title = new String(ch, start, length);
+		}
+		@Override
+		public void endElement(String uri, String localName,
+				String qName) {
+			if(inTitle) {
+				inTitle = false;
 			}
-			@Override
-			public void characters(char[] ch, int start, int length) {
-				if(inCategory) 
-					stringCategory = new String(ch, start, length);
-				if(inTitle)
-					title = new String(ch, start, length);
+			if(inCategory) {
+				if(stringCategory.equals("microservices"))
+					microservices.add(title);
+				inCategory = false;
 			}
-			@Override
-			public void endElement(String uri, String localName,
-					               String qName) {
-				if(inTitle) {
-					inTitle = false;
-				}
-				if(inCategory) {
-					if(stringCategory.equals("microservices"))
-						microservices.add(title);
-					inCategory = false;
-				}
-			}
-		};
+		}
+	};
 }

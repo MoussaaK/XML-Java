@@ -141,18 +141,18 @@ public class RSSReader {
 				inItem = true;
 		}
 		@Override
-		public void endElement(String uri, String localName,
-				               String qName) {				
-			if(qName.equals("item"))
-				inItem = false;
-			if(qName.equals("title"))
-				titles.add(string);
-		}
-		@Override
 		public void characters(char[] ch, int start, int length) {				
 			if(inItem) {
 				string = new String(ch, start, length);
 			}		
+		}
+		@Override
+		public void endElement(String uri, String localName,
+				               String qName) {				
+			if(inItem){	
+				titles.add(string);
+				inItem = false;
+			}
 		}
 	};
 	
@@ -166,31 +166,65 @@ public class RSSReader {
 				inCategory = true;
 		}
 		@Override
-		public void endElement(String uri, String localName,
-				               String qName) {				
-			if(qName.equals("category"))
-				inCategory = false;
-			if(qName.equals("title")) {
-				categories.add(string);
-				/*if(string != null && string.contains("microservices"))
-					microservices.add(string);*/
-			}
-		}
-		@Override
 		public void characters(char[] ch, int start, int length) {				
 			if(inCategory) {
 				string = new String(ch, start, length);
 			}		
 		}
+		@Override
+		public void endElement(String uri, String localName,
+				               String qName) {				
+			if(inCategory) {
+				categories.add(string);
+				inCategory = false;
+			}
+		}
 	};
 	
 	//Handler to count elements namespace
-		DefaultHandler countElementsInNamespace = new DefaultHandler() {
+	DefaultHandler countElementsInNamespace = new DefaultHandler() {
+		@Override
+		public void startElement(String uri, String localName,
+				String qName, Attributes attributes) {				
+			if(uri.equals("http://purl.org/rss/1.0/modules/slash/"))
+				countEIN++;
+		}
+	};
+	
+	
+	//Add all categories to a List
+		DefaultHandler microservicesCategoryTitles = new DefaultHandler() {
+			private boolean inTitle;
+			private String title;
+			private String stringCategory;
 			@Override
 			public void startElement(String uri, String localName,
 					                 String qName, Attributes attributes) {				
-				if(uri.equals("http://purl.org/rss/1.0/modules/slash/"))
-					countEIN++;
+				if(qName.equals("category"))
+					inCategory = true;
+				if(qName.equals("item"))
+					inItem = true;
+				if(qName.equals("title"))
+					inTitle = true;
+			}
+			@Override
+			public void characters(char[] ch, int start, int length) {
+				if(inCategory) 
+					stringCategory = new String(ch, start, length);
+				if(inTitle)
+					title = new String(ch, start, length);
+			}
+			@Override
+			public void endElement(String uri, String localName,
+					               String qName) {
+				if(inTitle) {
+					inTitle = false;
+				}
+				if(inCategory) {
+					if(stringCategory.equals("microservices"))
+						microservices.add(title);
+					inCategory = false;
+				}
 			}
 		};
 }

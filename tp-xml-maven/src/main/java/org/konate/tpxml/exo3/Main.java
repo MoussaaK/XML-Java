@@ -47,6 +47,10 @@ public class Main {
 		
 		in =  reader.read(url);		  
 		parser.parse(in, dh.CategoryTitles);
+		System.out.println("Categories Titles : " + dh.getCategories());
+		
+		in =  reader.read(url);		  
+		parser.parse(in, dh.microservicesCategoryTitles);
 		System.out.println("Microservices Titles : " + dh.getMicroservices());
 	
 	}

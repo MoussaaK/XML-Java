@@ -1,4 +1,4 @@
-package org.konate.tpxml;
+package org.konate.tpxml.exo1;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,12 +20,6 @@ public class Main {
 		Document document = util.seriaze(satya);
 		File file = new File("./XML/MarinXML.xml");
 		util.write(document, file);
-		
-		//Print after reading the XML file
-		System.out.println(util.read(file).asXML());
-		
-		//Create instance of Marin after reading the XML file
-		System.out.println(util.deserialize(util.read(file)));
 	}
 
 }

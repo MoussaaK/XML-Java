@@ -1,4 +1,4 @@
-package org.konate.tpxml;
+package org.konate.tpxml.exo2;
 
 import java.io.File;
 import java.io.FileNotFoundException;

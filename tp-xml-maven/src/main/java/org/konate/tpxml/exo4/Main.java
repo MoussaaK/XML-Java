@@ -52,13 +52,14 @@ public class Main {
 		String operationName = "";
 		for (Node node : nodes) {
 			String nameWithoutPrefixe = node.getText().substring(4);
-	
+
 			if (nameWithoutPrefixe.equals(message)) {
+
 				Node parent = node.getParent().getParent();
-				operationName = doc.valueOf(parent.getPath() + "/@name");
+				operationName = doc.valueOf(parent.getUniquePath() + "/@name");
 			}
 		}
-		
+
 		return operationName;
 	}
 
@@ -85,10 +86,10 @@ public class Main {
 
 		List<String> messageAttributes = _messageAttributesNames(document);
 		System.out.println("Message Attributes Name -> " + messageAttributes);
-		
+
 		//doc.selectSingleNode(parent.getPath() + "/@name").getText()
-		getPortType(document, "CartModifyRequestMsg");
-		//System.out.println("Operation of 'CartModifyRequestMsg' is : " + getPortType(document, "CartModifyRequestMsg"));
+		//getPortType(document, "CartModifyRequestMsg");
+		System.out.println("Operation of 'CartModifyRequestMsg' is : " + getPortType(document, "CartCreateRequestMsg"));
 	}
 
 }

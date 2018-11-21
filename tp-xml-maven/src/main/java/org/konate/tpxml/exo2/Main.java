@@ -17,7 +17,7 @@ public class Main {
 		Marin satya = new Marin(10, "NADELLA", "Satya", 51);
 		
 		XMLUtil util = new XMLUtil();
-		Document document = util.seriaze(satya);
+		Document document = util.serialize(satya);
 		File file = new File("./XML/MarinXML.xml");
 		util.write(document, file);
 		

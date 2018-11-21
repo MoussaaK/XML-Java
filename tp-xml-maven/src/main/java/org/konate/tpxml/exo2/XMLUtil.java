@@ -19,7 +19,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLUtil extends DefaultHandler {
 	
 	Element root;
-	Document seriaze(Marin marin) {
+	Document serialize(Marin marin) {
 		
 		Document document = DocumentHelper.createDocument();
 		
